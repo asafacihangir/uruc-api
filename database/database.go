@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"github.com/org_phoenix/orbey/models"
+	"github.com/org_phoenix/orbey/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -20,7 +20,7 @@ func ConnectDatabase() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local&tls=true",
 		dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	var err error
@@ -30,11 +30,11 @@ func ConnectDatabase() {
 	}
 
 	// User modelini veritabanına map'le
-	err = DB.AutoMigrate(&models.User{})
+	err = DB.AutoMigrate(&entity.User{}, &entity.Book{})
 	if err != nil {
 		log.Fatal("Veritabanı migrasyonunda hata: ", err)
 	}
 
-	fmt.Println("Veritabanına başarıyla bağlanıldı ve User modeli map'lendi.")
+	fmt.Println("Veritabanına başarıyla bağlanıldı ve User,Book	 modeli map'lendi.")
 
 }
